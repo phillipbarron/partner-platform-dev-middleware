@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "description": "express middleware to authenticate with partner platform in the ansence of the pp proxy",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@bbc/partner-platform-bbclogin-id-token-generator": "git+ssh://git@github.com/bbc/partner-platform-bbclogin-id-token-generator.git#bdc478080964c8208c35fbc7040d9ea1b8025162"
+  }
 }
