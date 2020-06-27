@@ -1,0 +1,7 @@
+{
+  "name": "partner-platform-dev-middleware",
+  "version": "1.0.0",
+  "description": "express middleware to authenticate with partner platform in the ansence of the pp proxy",
+  "main": "index.js",
+  "license": "MIT"
+}
