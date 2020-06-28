@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@bbc/cps-mi6": "^1.0.0",
     "@bbc/partner-platform-bbclogin-id-token-generator": "git+ssh://git@github.com/bbc/partner-platform-bbclogin-id-token-generator.git#bdc478080964c8208c35fbc7040d9ea1b8025162"
   }
 }
