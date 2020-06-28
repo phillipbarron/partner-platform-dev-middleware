@@ -1,6 +1,5 @@
 const partnerPlatform = require('@bbc/partner-platform-bbclogin-id-token-generator');
 const config = require('./config');
-const forEachSerial = require('../helpers/for-each-serial');
 
 const convertTokenToCookie = partnerPlatformHostTokens => Object
   .entries(partnerPlatformHostTokens)
@@ -18,10 +17,10 @@ const convertTokenToCookie = partnerPlatformHostTokens => Object
     },
   }));
 
-const fetchTokens = async ({prefix, hostname}, { username, password, totpKey}) => {
+const fetchToken = async ({hostname}, { username, password, totpKey}) => {
   const env = config.partnerPlatformEnvironment;
-  const applicationLoginClientIdEnvironmentKey = `${prefix}_LOGIN_CLIENT_ID_${env.toUpperCase()}`;
-  const applicationLoginClientSecretEnvironmentKey = `${prefix}_LOGIN_CLIENT_SECRET_${env.toUpperCase()}`;
+  const applicationLoginClientIdEnvironmentKey = `OPTIMO_LOGIN_CLIENT_ID_${env.toUpperCase()}`;
+  const applicationLoginClientSecretEnvironmentKey = `OPTIMO_LOGIN_CLIENT_SECRET_${env.toUpperCase()}`;
   const clientId = process.env[applicationLoginClientIdEnvironmentKey];
   const clientSecret = process.env[applicationLoginClientSecretEnvironmentKey];
 
@@ -49,39 +48,15 @@ const fetchTokens = async ({prefix, hostname}, { username, password, totpKey}) =
   }
 };
 
-const generateUserTokensMap = async (userCredentials, { isSecondUser = false }) => {
-  const isBehindPartnerPlatform = ({hostname}) => hostname.match(/^https:/);
-  const hostsToLogin = [
-    { name: 'OPTIMO', hostname: isSecondUser ? config.hostnames_secondUserOptimoClient : config.hostnames_optimoClient },
-    { name: 'AV', hostname: config.hostnames_AVActivity },
-    { name: 'IMAGE', hostname: config.hostnames_imageUploadActivity },
-    { name: 'PASSPORT', hostname: config.hostnames_passportControlActivity },
-  ].filter(isBehindPartnerPlatform);
 
-  const hostnameToTokensMap = {};
-  await forEachSerial(hostsToLogin, async ({ name, hostname}) => {
-    /*
-     Don't try refactor to make requests in parallel - Partner Platform auth fails with 401 'MFA failed' when it has
-     multiple requests in-flight.
-     */
-    hostnameToTokensMap[hostname] = await fetchTokens({ prefix: name, hostname }, userCredentials)
-  });
-  return hostnameToTokensMap
+exports.generateLoginCookies = async () => {
+    const partnerPlatformToken = await fetchToken(
+        { hostname: "https://optimo.int.tools.bbc.co.uk" },
+        { 
+            username: process.env.E2E_TEST_USERNAME,
+            password: process.env.E2E_TEST_PASSWORD,
+            totpKey:  process.env.E2E_TEST_ONE_TIME_PASSWORD_KEY
+        }
+    );
+    return convertTokenToCookie(partnerPlatformToken);
 };
-
-exports.generateLoginCookies = () => {
-  const partnerPlatformHostTokens = JSON.parse(process.env.PARTNER_PLATFORM_TOKENS_USER_1);
-  return convertTokenToCookie(partnerPlatformHostTokens);
-};
-
-exports.generateLoginCookiesAlternativeUser = () => {
-  const partnerPlatformHostTokens = JSON.parse(process.env.PARTNER_PLATFORM_TOKENS_USER_2);
-  return convertTokenToCookie(partnerPlatformHostTokens);
-};
-
-exports.generateUserLoginTokens = async (userCredentials1, userCredentials2) => {
-  process.env.PARTNER_PLATFORM_TOKENS_USER_1 = JSON.stringify(await generateUserTokensMap(userCredentials1, {}));
-  process.env.PARTNER_PLATFORM_TOKENS_USER_2 = JSON.stringify(await generateUserTokensMap(userCredentials2, { isSecondUser: true }));
-};
-
-
