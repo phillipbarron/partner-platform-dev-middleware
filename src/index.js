@@ -3,7 +3,7 @@ const tokenFetcher = require('./token-fetcher');
 const ppDevAuthMiddleware = async () => {
   let PP_JWT;
   if (process.env.ENVIRONMENT === 'dev') {
-    console.log('***************************************** WE ARE IN THE DEV ENVIRONMENT SO FETCHING AND EXPORTING A JSON WEB TOKEN *************************************************');
+    console.log('***************************************** WE ARE IN THE DEV ENVIRONMENT SO FETCHING JSON WEB TOKEN *************************************************');
     PP_JWT = await tokenFetcher.getToken();
   }
   return (req, res, next) => {
@@ -15,4 +15,6 @@ const ppDevAuthMiddleware = async () => {
   };
 };
 
-export default ppDevAuthMiddleware;
+module.exports = {
+  ppDevAuthMiddleware
+}

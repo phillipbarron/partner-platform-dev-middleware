@@ -2,24 +2,10 @@
   "name": "partner-platform-dev-middleware",
   "version": "1.0.0",
   "description": "express middleware to authenticate with partner platform in the absence of the pp proxy for nested activities",
-  "main": "dist/index.min.js",
+  "main": "src/index.js",
   "license": "MIT",
-  "scripts": {
-    "build:commonjs": "babel src --out-dir lib",
-    "clean": "rimraf lib",
-    "build": "yarn run clean && yarn run build:commonjs"
-  },
   "dependencies": {
     "@bbc/cps-mi6": "^1.0.0",
     "@bbc/partner-platform-bbclogin-id-token-generator": "git+ssh://git@github.com/bbc/partner-platform-bbclogin-id-token-generator.git#bdc478080964c8208c35fbc7040d9ea1b8025162"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.10.4",
-    "@babel/core": "^7.10.4",
-    "@babel/preset-env": "^7.10.4",
-    "cross-env": "^7.0.2",
-    "rimraf": "^3.0.2",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12"
   }
 }
