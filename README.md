@@ -4,6 +4,12 @@ Express middleware which will authenicate with BBC Login via the Partner platfor
 
 This is intended for use in applications which host child activities which are logged in by the parent.
 
+## install
+
+```bash
+yarn add @bbc/partner-platform-dev-middleware
+```
+
 ## Usage
 
 ```javascript
@@ -13,3 +19,9 @@ const app = express();
 
 app.use(ppDevAuthMiddleware());
 ```
+
+## todo
+
+* move the proxying part in here too
+* add build
+* publish
