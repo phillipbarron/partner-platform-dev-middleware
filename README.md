@@ -25,3 +25,6 @@ app.use(ppDevAuthMiddleware());
 * move the proxying part in here too
 * add build
 * publish
+
+
+## The async call in the init of this upsets express - have done this work in the dev boot section insead
